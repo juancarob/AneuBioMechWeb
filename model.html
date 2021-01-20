@@ -180,7 +180,7 @@
                         <div class="main_details">
                             <div class="col-md-6">
                                 <div class="m_details_img">
-                                    <iframe id="vtkjs" src="https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/shell.vtp" width="100%" height="500px"></iframe>
+                                    <iframe id="vtkjs" src="https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/c0005_011.vtp" width="100%" height="500px"></iframe>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -198,6 +198,27 @@
                                     <p>
                                       Para visualizar la carga aplicada y el campo de desplazamiento generado, respectivamente
                                     </p>
+
+
+                                    <script type="text/javascript">
+                                    function myHref(){
+                                        //document.getElementById('vtkjs').innerHTML="Visit Google"
+                                        //let url="https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/c0005_011.vtp"
+                                        document.getElementById('vtkjs').src="https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/shell.vtp"
+                                        document.getElementById('vtkjs').contentWindow.location.reload();
+                                        //document.getElementById('vtkjs').innerHTML = await(await fetch(url));
+                                        //setTimeout(refresh,2000);
+                                    }
+                                    </script>
+
+                                    <form>
+                                        <input type="button" onclick="myHref()" value="Change URL and text">
+                                    </form>
+
+
+
+
+
                                 </div>
                                 <hr />
                                 <div class="person_details m-top-40">

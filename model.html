@@ -42,7 +42,6 @@
     <script src="assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 
-<body data-spy="scroll" data-target=".navbar-collapse" onload="javascript:changeModelOptions()">
 
 
     <!-- Preloader -->
@@ -144,106 +143,44 @@
                         DiplacementField </b> <br /> in te viewer App
                     to explore applied load and generated displacement, respectively.
                 </p>
-                <div class="row">
-                    <div class="main_details">
-                        <div class="col-md-6">
-                            <div class="m_details_img">
-                                <iframe id="vtkjs"
-                                    src="https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/c0005_011.vtp"
-                                    width="100%" height="500px"></iframe>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="m_details_content m-bottom-40">
-                                <p>
-                                <h2>Model data </h2>
-                                for case:
-                                <select id="model_selector" onChange="changeModelOptions()">
-                                    <option value="c0005_011.vtp" selected="selected">c0005_011</option>
-                                    <option value="shell.vtp">shell</option>
-                                    <option value="c0003.vtp">c0005_057</option>
-                                </select>
-                                </p>
-                                <p>
-                                    Explore differet locations for the load:
-                                    <select id="load_selector" onChange="updateModel()">
-                                    </select>
-                                </p>
 
-
-
-                                <script type="text/javascript">
-                                    var models = ["c0001", "c0002", "c0003"];
-
-
-                                    function updateModel() {
-                                        var e = document.getElementById("load_selector");
-                                        var model_file = e.value;
-                                        var base_url = "https://kitware.github.io/vtk-js/examples/GeometryViewer/GeometryViewer.html?fileURL=https://aneubiomechweb.github.io/models/";
-                                        var model_url = base_url.concat(model_file);
-
-                                        document.getElementById('vtkjs').src = model_url
-                                        document.getElementById('vtkjs').contentWindow.location.reload();
-                                    }
-
-
-                                    function changeModelOptions() {
-                                        var selected_model = document.getElementById("model_selector").selectedIndex;
-                                        let loads = [                           //every load-test file for each model
-                                            ["c0005_011.vtp", "c0005_057.vtp"],
-                                            ["shell.vtp", "shell_0",],
-                                            ["C003_01", "C003_02", "C003_03", "C003_04", "C003_05"]
-                                        ];
-
-                                        let details = [                           //every load-test file for each model
-                                            ["c0005", "c0005 attribute #1 ", "c0005 attribute #2 ", "c0005 attribute #3 ", "c0005 attribute #4 ", "34", "23", "33", "12"],
-                                            ["shell", "shell attribute #1 ", "shell attribute #2 ", "shell attribute #3 ", "shell attribute #4 ", "89", "88", "63", "5"],
-                                            ["OTHER", "OTHER attribute #1 ", "OTHER attribute #2 ", "OTHER attribute #3 ", "OTHER attribute #4 ", "11", "41", "99", "7"],
-                                        ];
-
-                                        var model_details = details[selected_model];
-                                        var model_loads = loads[selected_model];
-                                        var str = ""
-                                        for (var item of model_loads) {
-                                            str += "<option value=" + item + ">" + item + "</option>"
-                                        }
-                                        document.getElementById("load_selector").innerHTML = str;
-                                        document.getElementById("characteristics_1").innerHTML = model_details[1];
-                                        document.getElementById("characteristics_2").innerHTML = model_details[2];
-                                        document.getElementById("characteristics_3").innerHTML = model_details[3];
-                                        document.getElementById("characteristics_4").innerHTML = model_details[4];
-
-                                        document.getElementById("percent1").innerHTML = model_details[5];
-                                        document.getElementById("percent_1").dataset.percent = model_details[5] + "%";
-                                        document.getElementById("percent2").innerHTML = model_details[6];
-                                        document.getElementById("percent_2").dataset.percent = model_details[6] + "%";
-                                        document.getElementById("percent3").innerHTML = model_details[7];
-                                        document.getElementById("percent_3").dataset.percent = model_details[7] + "%";
-                                        document.getElementById("percent4").innerHTML = model_details[8];
-                                        document.getElementById("percent_4").dataset.percent = model_details[8] + "%";
-
-                                        jQuery('.teamskillbar').each(function () {
-                                            jQuery(this).find('.teamskillbar-bar').animate({
-                                                width: jQuery(this).attr('data-percent')
-                                            }, 3000);
-                                        });
-
-                                        updateModel();
-                                    }
-
-
-                                    window.onload = changeModelOptions();
-
-
-
-                                    function selector(self) {
-                                        var model_id = self.dataset.model;
-                                        var model_selector = document.getElementById('model_selector');
-                                        model_selector.selectedIndex = model_id;
-                                        changeModelOptions();
-                                    }
-
-                                </script>
+                <head>
+                    <title>My VTK Viewer</title>
+                    <script src="https://unpkg.com/@kitware/vtk.js@9.0.1/dist/vtk.js"></script>
+                  </head>
+                  <body>
+                    <h1>My VTK Viewer</h1>
+                    <div id="renderer"></div>
+                    <script>
+                      // Load the VTK file
+                      var reader = vtk.vtkXMLReader();
+                      reader.setUrl('https://juancarob.github.io/AneuBioMechWeb/models/campos/C0014_loadVest.vtk');
+                      reader.onReady(() => {
+                        // Create a VTK.js scene
+                        var scene = vtk.Rendering.Misc.vtkFullScreenRenderWindow.newInstance({background: [0, 0, 0]});
+                
+                        // Get the active camera and renderer
+                        var renderer = scene.getRenderer();
+                        var camera = scene.getCamera();
+                
+                        // Add the dataset to the renderer
+                        var dataset = reader.getOutputData(0);
+                        var mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+                        var actor = vtk.Rendering.Core.vtkActor.newInstance();
+                        actor.setMapper(mapper);
+                        mapper.setInputData(dataset);
+                        renderer.addActor(actor);
+                
+                        // Render the scene
+                        renderer.resetCamera();
+                        renderer.resetCameraClippingRange();
+                        scene.getInteractor().initialize();
+                        scene.getInteractor().setEventInformation();
+                        scene.getInteractor().setView(renderer.getView());
+                        scene.getInteractor().bindEvents(document.getElementById('renderer'));
+                        scene.getInteractor().start();
+                      });
+                    </script>
 
 
 

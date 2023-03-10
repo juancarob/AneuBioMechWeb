@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My VTK Viewer</title>
+    <script src="https://unpkg.com/@kitware/vtk.js@9.0.1/dist/vtk.js"></script>
+  </head>
+  <body>
+    <h1>My VTK Viewer</h1>
+    <div id="renderer"></div>
+    <script>
+      // Load the VTK file
+      var reader = vtk.vtkXMLReader();
+      reader.setUrl('Chttps://juancarob.github.io/AneuBioMechWeb/models/campos/C0014_loadVest.vtk');
+      reader.onError((error) => {
+        console.error(error);
+      });
+      reader.onReady(() => {
+        // Create a VTK.js scene
+        var scene = vtk.Rendering.Misc.vtkFullScreenRenderWindow.newInstance({background: [0, 0, 0]});
+
+        // Get the active camera and renderer
+        var renderer = scene.getRenderer();
+        var camera = scene.getCamera();
+
+        // Add the dataset to the renderer
+        var dataset = reader.getOutputData(0);
+        var mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+        var actor = vtk.Rendering.Core.vtkActor.newInstance();
+        actor.setMapper(mapper);
+        mapper.setInputData(dataset);
+        renderer.addActor(actor);
+
+        // Render the scene
+        renderer.resetCamera();
+        renderer.resetCameraClippingRange();
+        scene.getInteractor().initialize();
+        scene.getInteractor().setEventInformation();
+        scene.getInteractor().setView(renderer.getView());
+        scene.getInteractor().bindEvents(document.getElementById('renderer'));
+        scene.getInteractor().start();
+      });
+    </script>
+  </body>
+</html>
